@@ -104,7 +104,16 @@ int32_t main()
         
 }
 
-/* output
+/*
+input:
+4
+1 3 8
+2 0 3
+3 4 2
+4 5 6
+
+
+output
 Gantt Chart:
 0 -> 3 : p2
 3 -> 11 : p1
