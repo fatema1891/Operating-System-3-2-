@@ -6,18 +6,6 @@ struct Process {
 };
 
 int main() {
-    /*
-    fast;
-    ll n,i;
-    cin>>n;
-    process proc[n];
-    for(i=0;i<n;i++)
-    {
-        cin>>proc[i].process_name>>proc[i].at>>proc[i].bt;
-    }
-    */
-
-
     int n = 4;
 
     Process p[] = {
@@ -73,3 +61,21 @@ int main() {
 
     return 0;
 }
+/*
+output:
+
+Gantt Chart:
+0 -> 3 : P2
+3 -> 11 : P1
+11 -> 13 : P3
+13 -> 19 : P4
+
+PID	AT	BT	CT	TAT	WT
+2	0	3	3	3	0
+1	3	8	11	8	0
+3	4	2	13	9	7
+4	5	6	19	14	8
+
+Average WT = 3.75
+Average TAT = 8.5
+*/
