@@ -104,20 +104,43 @@ int32_t main()
         
 }
 
+/* output
+Gantt Chart:
+0 -> 3 : p2
+3 -> 11 : p1
+11 -> 13 : p3
+13 -> 19 : p4
 
+proces	Arival_time
+  P2  		0
+  P1  		3
+  P3  		4
+  P4  		5
 
+proces	Burst_time
+  P2  		3
+  P1  		8
+  P3  		2
+  P4  		6
 
+proces	Completion_time
+  P2  		3
+  P1  		11
+  P3  		13
+  P4  		19
 
-/*int32_t main()
-{
-    ll t;
-cin >> t;
-cin.ignore();
+proces	Turnaround_time
+  P2  		3
+  P1  		8
+  P3  		9
+  P4  		14
 
-while(t--)
-{
-    string s;
-    getline(cin, s);
+proces	Waiting_time
+  P2  		0
+  P1  		0
+  P3  		7
+  P4  		8
+*/
     cout << s.size() << '\n';
 
     }
