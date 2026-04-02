@@ -141,7 +141,3 @@ proces	Waiting_time
   P3  		7
   P4  		8
 */
-    cout << s.size() << '\n';
-
-    }
-}*/
