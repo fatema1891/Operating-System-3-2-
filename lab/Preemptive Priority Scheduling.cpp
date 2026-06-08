@@ -40,8 +40,8 @@ int main() {
     while(completed < n) {
 
         int idx = -1;//selected process index
-        int bestPr = INT_MAX;//smallest priority found.
-
+        //int bestPr = INT_MAX;//smallest priority found.
+        int bestPr = 1000;
         // Find highest priority process among arrived processes
         for(int i = 0; i < n; i++) {
 
