@@ -26,7 +26,7 @@ int main()
     {
         cout<<"P"<<i+1<<": ";
         cin>>bt[i];
-        rt[i]=bt[i];
+        rt[i]=bt[i];//remaining time
     }
 
     // Sort by Arrival Time
