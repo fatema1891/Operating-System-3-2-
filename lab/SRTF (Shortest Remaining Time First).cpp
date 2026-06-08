@@ -48,20 +48,20 @@ int main()
     int completed = 0;
 
     // Gantt Chart
-    string ganttP[1000];
-    int ganttT[1000];
-    int g = 0;
+    string ganttP[1000];//process name
+    int ganttT[1000];//time
+    int g = 0;//index
 
     while(completed < n)
     {
-        int idx = -1;
+        int idx = -1;//search for best process
 
         // Find shortest remaining time process
         for(int i = 0; i < n; i++)
         {
-            if(at[i] <= currentTime && rt[i] > 0)
+            if(at[i] <= currentTime && rt[i] > 0)//process has arrived and not completed
             {
-                if(idx == -1 || rt[i] < rt[idx])
+                if(idx == -1 || rt[i] < rt[idx])//smallest remaining time → SRTF rule
                 {
                     idx = i;
                 }
@@ -69,7 +69,7 @@ int main()
         }
 
         // CPU Idle
-        if(idx == -1)
+        if(idx == -1)  //no process available at current time
         {
             if(g == 0 || ganttP[g - 1] != "Idle")
             {
@@ -82,10 +82,10 @@ int main()
             continue;
         }
 
-        string pname = "P" + to_string(pid[idx]);
+        string pname = "P" + to_string(pid[idx]);//Convert process ID into string format
 
         // Record process change in Gantt chart
-        if(g == 0 || ganttP[g - 1] != pname)
+        if(g == 0 || ganttP[g - 1] != pname)//avoids duplicate entries
         {
             ganttP[g] = pname;
             ganttT[g] = currentTime;
