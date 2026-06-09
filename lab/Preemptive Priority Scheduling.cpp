@@ -125,7 +125,7 @@ int main() {
 
     cout << "|\n";
 
-    for(int i = 0; i < g; i++)
+    for(int i = 0; i <= g; i++)
         cout << ganttT[i] << "\t";
 
     cout << "\n";
