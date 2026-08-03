@@ -82,16 +82,14 @@ int main() {
         cout << "Average TAT: " << double(total_tat / n) << endl;
 
         cout << "\nGantt Chart:\n";
-        cout << " ";
-        for (int i = 0; i < gantt_size; i++) cout << "--------";
+
         cout << "\n|";
         for (int i = 0; i < gantt_size; i++) {
             if (gantt_pid[i] == -1) cout << "  Idle  |";
             else cout << "  P" << gantt_pid[i] << "   |";
         }
-        cout << "\n ";
-        for (int i = 0; i < gantt_size; i++) cout << "--------";
-        cout << "\n" << gantt_time[0];
+
+        cout << "\n\n" << gantt_time[0];
         for (int i = 0; i < gantt_size; i++) cout << "\t" << gantt_time[i];
         cout << "\n\n";
     }
@@ -178,16 +176,14 @@ int main() {
         cout << "Average TAT: " << double(total_tat / n) << endl;
 
         cout << "\nGantt Chart:\n";
-        cout << " ";
-        for (int i = 0; i < gantt_size; i++) cout << "--------";
+
         cout << "\n|";
         for (int i = 0; i < gantt_size; i++) {
             if (gantt_pid[i] == -1) cout << "  Idle  |";
             else cout << "  P" << gantt_pid[i] << "   |";
         }
-        cout << "\n ";
-        for (int i = 0; i < gantt_size; i++) cout << "--------";
-        cout << "\n" << gantt_time[0];
+
+        cout << "\n\n" << gantt_time[0];
         for (int i = 0; i < gantt_size; i++) cout << "\t" << gantt_time[i];
         cout << "\n\n";
     }
@@ -254,23 +250,22 @@ int main() {
         cout << "Average TAT: " << double(total_tat / n) << endl;
 
         cout << "\nGantt Chart:\n";
-        cout << " ";
-        for (int i = 0; i < gantt_size; i++) cout << "--------";
+
+        //for (int i = 0; i < gantt_size; i++) cout << "--------";
         cout << "\n|";
         for (int i = 0; i < gantt_size; i++) {
             if (gantt_pid[i] == -1) cout << "  Idle  |";
             else cout << "  P" << gantt_pid[i] << "   |";
         }
-        cout << "\n ";
-        for (int i = 0; i < gantt_size; i++) cout << "--------";
-        cout << "\n" << gantt_time[0];
+
+        cout << "\n\n" << gantt_time[0];
         for (int i = 0; i < gantt_size; i++) cout << "\t" << gantt_time[i];
         cout << "\n\n";
     }
 
     // PRIORITY PREEMPTIVE
     {
-        cout << "\n        Priority Preemptive :\n\n";
+        cout << "\n    Priority Preemptive :\n\n";
         cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n\n";
 
         int ct[100], tat[100], wt[100];
@@ -349,17 +344,15 @@ int main() {
         cout << "\nAverage WT: " << double(total_wt / n )<< endl;
         cout << "Average TAT: " << double(total_tat / n )<< endl;
 
-        cout << "\n    Gantt Chart:\n";
-        cout << " ";
-        for (int i = 0; i < gantt_size; i++) cout << "--------";
-        cout << "\n|";
+        cout << "\n    Gantt Chart:\n\n";
+
+        cout << "|";
         for (int i = 0; i < gantt_size; i++) {
             if (gantt_pid[i] == -1) cout << "  Idle  |";
             else cout << "  P" << gantt_pid[i] << "   |";
         }
-        cout << "\n ";
-        for (int i = 0; i < gantt_size; i++) cout << "--------";
-        cout << "\n" << gantt_time[0];
+
+        cout << "\n\n" << gantt_time[0];
         for (int i = 0; i < gantt_size; i++) cout << "\t" << gantt_time[i];
         cout << "\n\n";
     }
