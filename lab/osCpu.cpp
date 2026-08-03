@@ -9,7 +9,6 @@ int main() {
 
     int pid[100], at[100], bt[100], pr[100];
 
-    // Input process details
     cout << "\nEnter process details:\n";
     for (int i = 0; i < n; i++) {
         pid[i] = i + 1;
@@ -18,14 +17,10 @@ int main() {
         cout << "  Burst Time: "; cin >> bt[i];
         cout << "  Priority (lower = higher): "; cin >> pr[i];
     }
-
-    // ============================================================
-    // ALGORITHM 1: SJF NON-PREEMPTIVE
-    // ============================================================
+    // SJF NON-PREEMPTIVE
     {
-        cout << "\n=== SJF Non-Preemptive ===\n";
-        cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n";
-        cout << "------------------------------------------------\n";
+        cout << "\n      SJF Non-Preemptive :\n";
+        cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n\n";
 
         int ct[100], tat[100], wt[100];
         bool completed[100] = {false};
@@ -35,7 +30,7 @@ int main() {
 
         while (completed_count < n) {
             int idx = -1;
-            int min_bt = INT_MAX;
+            int min_bt = 1005;
 
             for (int i = 0; i < n; i++) {
                 if (!completed[i] && at[i] <= current_time) {
@@ -47,7 +42,7 @@ int main() {
             }
 
             if (idx == -1) {
-                int next_arrival = INT_MAX;
+                int next_arrival = 1005;
                 for (int i = 0; i < n; i++) {
                     if (!completed[i] && at[i] < next_arrival) {
                         next_arrival = at[i];
@@ -80,8 +75,7 @@ int main() {
             total_tat += tat[i];
         }
 
-        cout << "------------------------------------------------\n";
-        cout << "Average WT: " << fixed << setprecision(2) << total_wt / n << endl;
+        cout << "\nAverage WT: " << fixed << setprecision(2) << total_wt / n << endl;
         cout << "Average TAT: " << fixed << setprecision(2) << total_tat / n << endl;
 
         cout << "\nGantt Chart:\n";
@@ -96,16 +90,13 @@ int main() {
         for (int i = 0; i < gantt_size; i++) cout << "--------";
         cout << "\n" << gantt_time[0];
         for (int i = 0; i < gantt_size; i++) cout << "\t" << gantt_time[i];
-        cout << "\n";
+        cout << "\n\n";
     }
 
-    // ============================================================
-    // ALGORITHM 2: SJF PREEMPTIVE (SRTF)
-    // ============================================================
+    // SJF PREEMPTIVE (SRTF)
     {
-        cout << "\n=== SJF Preemptive (SRTF) ===\n";
-        cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n";
-        cout << "------------------------------------------------\n";
+        cout << "\n    SJF Preemptive (SRTF) :\n\n";
+        cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n\n";
 
         int ct[100], tat[100], wt[100];
         int remaining_bt[100];
@@ -119,7 +110,7 @@ int main() {
 
         while (completed_count < n) {
             int idx = -1;
-            int min_remaining = INT_MAX;
+            int min_remaining = 1005;
 
             for (int i = 0; i < n; i++) {
                 if (!completed[i] && at[i] <= current_time) {
@@ -131,7 +122,7 @@ int main() {
             }
 
             if (idx == -1) {
-                int next_arrival = INT_MAX;
+                int next_arrival = 1005;
                 for (int i = 0; i < n; i++) {
                     if (!completed[i] && at[i] < next_arrival) {
                         next_arrival = at[i];
@@ -195,16 +186,13 @@ int main() {
         for (int i = 0; i < gantt_size; i++) cout << "--------";
         cout << "\n" << gantt_time[0];
         for (int i = 0; i < gantt_size; i++) cout << "\t" << gantt_time[i];
-        cout << "\n";
+        cout << "\n\n";
     }
 
-    // ============================================================
-    // ALGORITHM 3: PRIORITY NON-PREEMPTIVE
-    // ============================================================
+    // PRIORITY NON-PREEMPTIVE
     {
-        cout << "\n=== Priority Non-Preemptive ===\n";
-        cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n";
-        cout << "------------------------------------------------\n";
+        cout << "\n   Priority Non-Preemptive :\n\n";
+        cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n\n";
 
         int ct[100], tat[100], wt[100];
         bool completed[100] = {false};
@@ -214,7 +202,7 @@ int main() {
 
         while (completed_count < n) {
             int idx = -1;
-            int highest_priority = INT_MAX;
+            int highest_priority = 1005;
 
             for (int i = 0; i < n; i++) {
                 if (!completed[i] && at[i] <= current_time) {
@@ -226,7 +214,7 @@ int main() {
             }
 
             if (idx == -1) {
-                int next_arrival = INT_MAX;
+                int next_arrival = 1005;
                 for (int i = 0; i < n; i++) {
                     if (!completed[i] && at[i] < next_arrival) {
                         next_arrival = at[i];
@@ -259,8 +247,7 @@ int main() {
             total_tat += tat[i];
         }
 
-        cout << "------------------------------------------------\n";
-        cout << "Average WT: " << fixed << setprecision(2) << total_wt / n << endl;
+        cout << "\nAverage WT: " << fixed << setprecision(2) << total_wt / n << endl;
         cout << "Average TAT: " << fixed << setprecision(2) << total_tat / n << endl;
 
         cout << "\nGantt Chart:\n";
@@ -275,16 +262,13 @@ int main() {
         for (int i = 0; i < gantt_size; i++) cout << "--------";
         cout << "\n" << gantt_time[0];
         for (int i = 0; i < gantt_size; i++) cout << "\t" << gantt_time[i];
-        cout << "\n";
+        cout << "\n\n";
     }
 
-    // ============================================================
-    // ALGORITHM 4: PRIORITY PREEMPTIVE
-    // ============================================================
+    // PRIORITY PREEMPTIVE
     {
-        cout << "\n=== Priority Preemptive ===\n";
-        cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n";
-        cout << "------------------------------------------------\n";
+        cout << "\n        Priority Preemptive :\n\n";
+        cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n\n";
 
         int ct[100], tat[100], wt[100];
         int remaining_bt[100];
@@ -298,7 +282,7 @@ int main() {
 
         while (completed_count < n) {
             int idx = -1;
-            int highest_priority = INT_MAX;
+            int highest_priority = 1005;
 
             for (int i = 0; i < n; i++) {
                 if (!completed[i] && at[i] <= current_time) {
@@ -310,7 +294,7 @@ int main() {
             }
 
             if (idx == -1) {
-                int next_arrival = INT_MAX;
+                int next_arrival = 1005;
                 for (int i = 0; i < n; i++) {
                     if (!completed[i] && at[i] < next_arrival) {
                         next_arrival = at[i];
@@ -359,11 +343,10 @@ int main() {
             total_tat += tat[i];
         }
 
-        cout << "------------------------------------------------\n";
-        cout << "Average WT: " << fixed << setprecision(2) << total_wt / n << endl;
+        cout << "\nAverage WT: " << fixed << setprecision(2) << total_wt / n << endl;
         cout << "Average TAT: " << fixed << setprecision(2) << total_tat / n << endl;
 
-        cout << "\nGantt Chart:\n";
+        cout << "\n    Gantt Chart:\n";
         cout << " ";
         for (int i = 0; i < gantt_size; i++) cout << "--------";
         cout << "\n|";
@@ -375,9 +358,8 @@ int main() {
         for (int i = 0; i < gantt_size; i++) cout << "--------";
         cout << "\n" << gantt_time[0];
         for (int i = 0; i < gantt_size; i++) cout << "\t" << gantt_time[i];
-        cout << "\n";
+        cout << "\n\n";
     }
-
 
     return 0;
 }
