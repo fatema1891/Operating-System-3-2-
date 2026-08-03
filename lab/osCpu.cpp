@@ -10,12 +10,13 @@ int main() {
     int pid[100], at[100], bt[100], pr[100];
 
     cout << "\nEnter process details:\n";
+    //lower value = higher priority:
     for (int i = 0; i < n; i++) {
         pid[i] = i + 1;
         cout << "\nProcess P" << pid[i] << ":\n";
         cout << "  Arrival Time: "; cin >> at[i];
         cout << "  Burst Time: "; cin >> bt[i];
-        cout << "  Priority (lower = higher): "; cin >> pr[i];
+        cout << "  Priority: "; cin >> pr[i];
     }
     // SJF NON-PREEMPTIVE
     {
