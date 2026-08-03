@@ -10,7 +10,7 @@ int main() {
     int pid[100], at[100], bt[100], pr[100];
 
     cout << "\nEnter process details:\n";
-    //lower value = higher priority:
+    //Priority (lower value = higher priority)
     for (int i = 0; i < n; i++) {
         pid[i] = i + 1;
         cout << "\nProcess P" << pid[i] << ":\n";
@@ -20,7 +20,7 @@ int main() {
     }
     // SJF NON-PREEMPTIVE
     {
-        cout << "\n      SJF Non-Preemptive :\n";
+        cout << "\n  SJF Non-Preemptive :\n";
         cout << "PID\tAT\tBT\tPR\tCT\tTAT\tWT\n\n";
 
         int ct[100], tat[100], wt[100];
@@ -76,8 +76,10 @@ int main() {
             total_tat += tat[i];
         }
 
-        cout << "\nAverage WT: " << fixed << setprecision(2) << total_wt / n << endl;
-        cout << "Average TAT: " << fixed << setprecision(2) << total_tat / n << endl;
+        //cout << "\nAverage WT: " << fixed << setprecision(2) << total_wt / n << endl;
+        cout << "\nAverage WT: " << double(total_wt /n) << endl;
+
+        cout << "Average TAT: " << double(total_tat / n) << endl;
 
         cout << "\nGantt Chart:\n";
         cout << " ";
@@ -172,8 +174,8 @@ int main() {
             total_tat += tat[i];
         }
 
-        cout << "\nAverage WT: " << fixed << setprecision(2) << total_wt / n << endl;
-        cout << "Average TAT: " << fixed << setprecision(2) << total_tat / n << endl;
+        cout << "\nAverage WT: " << double(total_wt / n )<< endl;
+        cout << "Average TAT: " << double(total_tat / n) << endl;
 
         cout << "\nGantt Chart:\n";
         cout << " ";
@@ -248,8 +250,8 @@ int main() {
             total_tat += tat[i];
         }
 
-        cout << "\nAverage WT: " << fixed << setprecision(2) << total_wt / n << endl;
-        cout << "Average TAT: " << fixed << setprecision(2) << total_tat / n << endl;
+        cout << "\nAverage WT: " << double(total_wt / n) << endl;
+        cout << "Average TAT: " << double(total_tat / n) << endl;
 
         cout << "\nGantt Chart:\n";
         cout << " ";
@@ -344,8 +346,8 @@ int main() {
             total_tat += tat[i];
         }
 
-        cout << "\nAverage WT: " << fixed << setprecision(2) << total_wt / n << endl;
-        cout << "Average TAT: " << fixed << setprecision(2) << total_tat / n << endl;
+        cout << "\nAverage WT: " << double(total_wt / n )<< endl;
+        cout << "Average TAT: " << double(total_tat / n )<< endl;
 
         cout << "\n    Gantt Chart:\n";
         cout << " ";
