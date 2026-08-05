@@ -93,7 +93,7 @@ int main()
             continue;
         }
 
-        wt[idx] = currentTime - at[idx];
+        wt[idx] = currentTime - at[idx];  //Waiting Time = CPU Start Time − Arrival (আগমন) Time
 
         ct[idx] = currentTime + bt[idx];
 
