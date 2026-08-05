@@ -149,3 +149,105 @@ int main()
 
     return 0;
 }
+
+
+************************************************************8
+
+
+                 easy understand
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    int n,i,j;
+    cout<<"Enter  number of process:";
+    cin>>n;
+
+    int pid[100],at[100],bt[100],ct[100],wt[100],tat[100];
+
+    for(i=0;i<n;i++)
+    {
+        pid[i]=i+1;
+        cout<<"\nprocess p"<<pid[i]<<":\n";
+        cout<<"Arrival Time: ";cin>>at[i];
+        cout<<"Burst Time: ";cin>>bt[i];
+    }
+
+    bool completePid[100]={false};
+    int completeProcess=0;
+
+    int currentTime=0; //Cpu_start_time;
+    string ganttPro[100];
+    int ganttTime[100];
+    ganttTime[0]=0;
+    int k=0;
+
+    double sumWT=0,sumTAT=0;
+
+    while(completeProcess<n)
+    {
+        int minBurst=999 ,indArriveProcess=-1;
+        for(i=0;i<n;i++)
+        {
+            if(completePid[i]==false&&at[i]<=currentTime&&bt[i]<minBurst)
+                minBurst=bt[i],indArriveProcess=i;
+        }
+
+        if(indArriveProcess==-1)
+        {
+            int nextArrivelTime=999;
+            for(i=0;i<n;i++)
+            {
+                if(completePid[i]==false&&at[i]<nextArrivelTime)
+                    nextArrivelTime=at[i];
+            }
+            ganttPro[k]="IDLE";
+            currentTime=nextArrivelTime;
+            ganttTime[++k]=currentTime;
+
+            continue;
+        }
+
+        wt[indArriveProcess]=currentTime - at[indArriveProcess];
+        ct[indArriveProcess]=currentTime + bt[indArriveProcess];
+        tat[indArriveProcess] = ct[indArriveProcess] - at[indArriveProcess];
+
+        currentTime=ct[indArriveProcess];
+        completeProcess++;
+        completePid[indArriveProcess]=true;
+
+        sumTAT+=tat[indArriveProcess],sumWT+=wt[indArriveProcess];
+
+        ganttPro[k]="p"+to_string(pid[indArriveProcess]);
+        ganttTime[++k]=currentTime;
+    }
+
+    cout<<"\nprocess\tAt\tBT\tCT\tWT\tTAT\n\n";
+    for(i=0;i<n;i++)
+    {
+        cout<<"p"<<pid[i]<<"\t"<<at[i]<<"\t"<<bt[i]<<'\t'<<ct[i]<<'\t'<<wt[i]<<'\t'<<tat[i]<<'\n';
+    }
+
+    cout<<"\n\nAverage WT: "<<sumWT/n<<'\n';
+    cout<<"Average TAT: "<<sumTAT/n<<'\n';
+
+    cout<<"\n\nGantt Chart:\n";
+    for(i=0;i<k;i++)
+    {
+        cout<<"| "<<ganttPro[i]<<" ";
+    }
+    cout<<"| "<<'\n';
+    for(i=0;i<=k;i++)
+    {
+        cout<<ganttTime[i];
+        if(ganttPro[i]=="IDLE")cout<<"\t";
+        else cout<<"   ";
+
+    }
+    cout<<"\n\n";
+
+
+}
+
