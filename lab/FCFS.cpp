@@ -122,3 +122,89 @@ int main()
 
     return 0;
 }
+
+
+
+                                          better approch
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    int n,i,j;
+    cout<<"Enter number of process :";
+    cin>>n;
+    int pid[n],at[n],bt[n],pr[n],wt[n],tat[n],ct[n];
+    for(i=0;i<n;i++)
+    {
+        pid[i]=i+1;
+        cout<<"\nprocess p"<<pid[i]<<":\n";
+        cout<<"Arrival time: ";cin>>at[i];
+        cout<<"Burst time: ";cin>>bt[i];
+    }
+    //sort arrival time
+    for(i=0;i<n-1;i++)
+    {
+        for(j=i+1;j<n;j++)
+        {
+            if(at[j]<at[i])
+            {
+                swap(at[i],at[j]);
+                swap(bt[i],bt[j]);
+                swap(pid[i],pid[j]);
+            }
+        }
+    }
+
+    int CPU_start_time=0;
+   double sumWT=0,sumTAT=0;
+
+    for(i=0;i<n;i++)
+    {
+        if(CPU_start_time<at[i])CPU_start_time=at[i];
+
+        wt[i]=CPU_start_time -at[i];
+        ct[i]=CPU_start_time+bt[i];
+        tat[i]=ct[i]-at[i];
+
+        CPU_start_time=ct[i];
+
+        sumWT+=wt[i],sumTAT+=tat[i];
+    }
+
+    cout<<"\nprocess\tAT\tBT\tCT\tWT\tTAT\n\n";
+
+    for(i=0;i<n;i++)
+    {
+        cout<<"p"<<pid[i]<<'\t'<<at[i]<<'\t'<<bt[i]<<'\t'<<ct[i]<<'\t'<<wt[i]<<'\t'<<tat[i]<<"\n";
+    }
+    cout<<"\n\nAverage wt: "<<sumWT/n<<"\n";
+    cout<<"Average tat: "<<sumTAT/n<<"\n";
+
+    cout<<"\nGantt chartt:\n"<<"|";
+    CPU_start_time=0;
+    for(i=0;i<n;i++)
+    {
+        if(CPU_start_time<at[i])
+        {
+            cout<<"IDLE | ";
+            CPU_start_time=at[i];
+        }
+        cout<<" p"<<pid[i]<<" |";
+        CPU_start_time+=bt[i];
+    }
+
+    CPU_start_time=0;
+    cout<<'\n'<<0;
+    for(i=0;i<n;i++)
+    {
+        if(CPU_start_time<at[i])cout<<"     "<<at[i];
+        CPU_start_time+=bt[i];
+        cout<<"    "<<CPU_start_time;
+    }
+    cout<<"\n\n";
+
+}
+
