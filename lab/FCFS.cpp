@@ -103,7 +103,7 @@ int main()
     cout << "\n";
 
     // Time line
-    time = 0;
+    time = 0;  //CPU Start Time
     cout << 0;
 
     for(int i = 0; i < n; i++)
