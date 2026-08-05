@@ -49,7 +49,7 @@ int main()
         if(time < at[i])
             time = at[i];
 
-        wt[i] = time - at[i];
+        wt[i] = time - at[i];    //Waiting Time = CPU Start Time − Arrival (আগমন) Time
 
         ct[i] = time + bt[i];
 
