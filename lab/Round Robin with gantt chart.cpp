@@ -1,96 +1,37 @@
-//Round Robin Algorithm
-#include <iostream>
-#include <algorithm>
+// Round Robin (RR) - Preemptive Scheduling
+#include<bits/stdc++.h>
 using namespace std;
-
-void queueUpdation(int queue[], int n, int maxProcessIndex)
-{
-    int zeroIndex = -1;
-
-    for(int i = 0; i < n; i++)
-    {
-        if(queue[i] == 0)
-        {
-            zeroIndex = i;
-            break;
-        }
-    }
-
-    if(zeroIndex != -1)
-        queue[zeroIndex] = maxProcessIndex + 1;
-}
-
-void queueMaintainence(int queue[], int n)
-{
-    for(int i = 0; (i < n - 1) && (queue[i + 1] != 0); i++)
-    {
-        swap(queue[i], queue[i + 1]);
-    }
-}
-
-void checkNewArrival(int timer, int arrival[], int n,
-                     int &maxProcessIndex, int queue[])
-{
-    if(timer <= arrival[n - 1])
-    {
-        bool newArrival = false;
-
-        for(int j = maxProcessIndex + 1; j < n; j++)
-        {
-            if(arrival[j] <= timer)
-            {
-                maxProcessIndex = j;
-                newArrival = true;
-            }
-        }
-
-        if(newArrival)
-            queueUpdation(queue, n, maxProcessIndex);
-    }
-}
 
 int main()
 {
     int n, tq;
-    int timer = 0;
-    int maxProcessIndex = 0;
 
-    float avgWait = 0, avgTT = 0;
+    cout << "Enter number of processes: ";
+    cin >> n;
 
     cout << "Enter Time Quantum: ";
     cin >> tq;
 
-    cout << "Enter Number of Processes: ";
-    cin >> n;
+    int pid[100], at[100], bt[100], rt[100];
+    int ct[100], wt[100], tat[100];
 
-    int pid[n];
-    int arrival[n];
-    int burst[n];
-    int temp_burst[n];
-    int wait[n];
-    int turn[n];
-    int queue[n];
-    bool complete[n];
+    int response_t[100] = {0};
+    bool first_response[100] = {false};
 
-    // Gantt Chart Arrays
-    int ganttPid[1000];
-    int ganttStart[1000];
-    int ganttEnd[1000];
-    int ganttCount = 0;
-
-    cout << "\nEnter Arrival Times:\n";
+    cout << "\nEnter Arrival Time:\n";
     for(int i = 0; i < n; i++)
     {
         pid[i] = i + 1;
         cout << "P" << i + 1 << ": ";
-        cin >> arrival[i];
+        cin >> at[i];
     }
 
-    cout << "\nEnter Burst Times:\n";
+    cout << "\nEnter Burst Time:\n";
     for(int i = 0; i < n; i++)
     {
         cout << "P" << i + 1 << ": ";
-        cin >> burst[i];
+        cin >> bt[i];
+        rt[i] = bt[i];
     }
 
     // Sort by Arrival Time
@@ -98,356 +39,181 @@ int main()
     {
         for(int j = i + 1; j < n; j++)
         {
-            if(arrival[i] > arrival[j])
+            if(at[i] > at[j])
             {
-                swap(arrival[i], arrival[j]);
-                swap(burst[i], burst[j]);
+                swap(at[i], at[j]);
+                swap(bt[i], bt[j]);
+                swap(rt[i], rt[j]);
                 swap(pid[i], pid[j]);
             }
         }
     }
 
-    for(int i = 0; i < n; i++)
+    int currentTime = 0;
+    int completed = 0;
+
+    // Gantt Chart
+    string ganttP[1000];
+    int ganttT[1000];
+    int g = 0;
+
+    // Queue for Round Robin
+    int queue[1000];
+    int front = 0, rear = 0;
+    bool inQueue[100] = {false};
+
+    double sumRT = 0;
+
+    while(completed < n)
     {
-        temp_burst[i] = burst[i];
-        complete[i] = false;
-        queue[i] = 0;
-    }
-
-    while(timer < arrival[0])
-        timer++;
-
-    queue[0] = 1;
-
-    while(true)
-    {
-        bool finished = true;
-
-        for(int i = 0; i < n; i++)
+        // If queue is empty, CPU goes IDLE
+        if(front == rear)
         {
-            if(temp_burst[i] > 0)
+            int nextArrival = INT_MAX;
+            for(int i = 0; i < n; i++)
             {
-                finished = false;
-                break;
+                if(rt[i] > 0 && at[i] < nextArrival)
+                    nextArrival = at[i];
             }
+
+            if(g == 0 || ganttP[g - 1] != "Idle")
+            {
+                ganttP[g] = "Idle";
+                ganttT[g] = currentTime;
+                g++;
+            }
+
+            currentTime = nextArrival;
+
+            // Add processes that have arrived
+            for(int i = 0; i < n; i++)
+            {
+                if(rt[i] > 0 && at[i] <= currentTime && !inQueue[i])
+                {
+                    queue[rear++] = i;
+                    inQueue[i] = true;
+                }
+            }
+            continue;
         }
 
-        if(finished)
-            break;
+        // Get process from front of queue
+        int idx = queue[front++];
+        inQueue[idx] = false;
 
-        for(int i = 0; i < n && queue[i] != 0; i++)
+        // Response Time
+        if(first_response[idx] == false)
         {
-            int current = queue[0] - 1;
+            response_t[idx] = currentTime - at[idx];
+            first_response[idx] = true;
+            sumRT += response_t[idx];
+        }
 
-            int startTime = timer;
-            int ctr = 0;
+        string pname = "P" + to_string(pid[idx]);
 
-            while(ctr < tq && temp_burst[current] > 0)
+        // Gantt Chart
+        if(g == 0 || ganttP[g - 1] != pname)
+        {
+            ganttP[g] = pname;
+            ganttT[g] = currentTime;
+            g++;
+        }
+
+        // Execute for time quantum
+        int execTime = min(tq, rt[idx]);
+        rt[idx] -= execTime;
+        currentTime += execTime;
+
+        // Add new arrivals
+        for(int i = 0; i < n; i++)
+        {
+            if(rt[i] > 0 && at[i] <= currentTime && !inQueue[i])
             {
-                temp_burst[current]--;
-                timer++;
-                ctr++;
-
-                checkNewArrival(timer, arrival, n,
-                                maxProcessIndex, queue);
-            }
-
-            // Store Gantt Chart Entry
-            if(startTime != timer)
-            {
-                ganttPid[ganttCount] = pid[current];
-                ganttStart[ganttCount] = startTime;
-                ganttEnd[ganttCount] = timer;
-                ganttCount++;
-            }
-
-            if(temp_burst[current] == 0 &&
-               complete[current] == false)
-            {
-                turn[current] = timer;
-                complete[current] = true;
-            }
-
-            bool idle = true;
-
-            if(queue[n - 1] == 0)
-            {
-                for(int j = 0; j < n && queue[j] != 0; j++)
+                bool alreadyInQueue = false;
+                for(int j = front; j < rear; j++)
                 {
-                    if(!complete[queue[j] - 1])
+                    if(queue[j] == i)
                     {
-                        idle = false;
+                        alreadyInQueue = true;
                         break;
                     }
                 }
+                if(!alreadyInQueue)
+                {
+                    queue[rear++] = i;
+                    inQueue[i] = true;
+                }
             }
-            else
-            {
-                idle = false;
-            }
+        }
 
-            if(idle)
+        // If not completed, add back to queue
+        if(rt[idx] > 0)
+        {
+            bool alreadyInQueue = false;
+            for(int j = front; j < rear; j++)
             {
-                timer++;
-                checkNewArrival(timer, arrival, n,
-                                maxProcessIndex, queue);
+                if(queue[j] == idx)
+                {
+                    alreadyInQueue = true;
+                    break;
+                }
             }
-
-            queueMaintainence(queue, n);
+            if(!alreadyInQueue)
+            {
+                queue[rear++] = idx;
+                inQueue[idx] = true;
+            }
+        }
+        else
+        {
+            ct[idx] = currentTime;
+            tat[idx] = ct[idx] - at[idx];
+            wt[idx] = tat[idx] - bt[idx];
+            completed++;
         }
     }
 
-    // Calculate WT and TAT
-    for(int i = 0; i < n; i++)
-    {
-        turn[i] = turn[i] - arrival[i];
-        wait[i] = turn[i] - burst[i];
+    ganttT[g] = currentTime;
 
-        avgWait += wait[i];
-        avgTT += turn[i];
-    }
+    // Display Results
+    double avgWT = 0, avgTAT = 0;
 
-    // Process Table
-    cout << "\n\nPID\tAT\tBT\tWT\tTAT\n";
+    cout << "\nPID\tAT\tBT\tCT\tWT\tTAT\n";
+    cout << "----------------------------------------\n";
 
     for(int i = 0; i < n; i++)
     {
         cout << "P" << pid[i]
-             << "\t" << arrival[i]
-             << "\t" << burst[i]
-             << "\t" << wait[i]
-             << "\t" << turn[i]
+             << "\t" << at[i]
+             << "\t" << bt[i]
+             << "\t" << ct[i]
+             << "\t" << wt[i]
+             << "\t" << tat[i]
              << endl;
-    }
 
+        avgWT += wt[i];
+        avgTAT += tat[i];
+    }
+    cout << "----------------------------------------\n";
+    cout << "Average WT:  " << avgWT / n << "\n";
+    cout << "Average TAT: " << avgTAT / n << "\n";
+    cout << "Average RT:  " << sumRT / n << "\n";
 
     // Gantt Chart
-    cout << "\nGantt Chart:\n\n";
-
-    for(int i = 0; i < ganttCount; i++)
+    cout << "\nGantt Chart:\n";
+    cout << "|";
+    for(int i = 0; i < g; i++)
     {
-        cout << "| P" << ganttPid[i] << " ";
+        cout << " " << ganttP[i] << " |";
     }
-
-    cout << "|\n";
-
-    cout << ganttStart[0];
-
-    for(int i = 0; i < ganttCount; i++)
-    {
-        cout << "\t" << ganttEnd[i];
-    }
-
     cout << "\n";
 
-    // Averages
-    cout << "\nAverage Waiting Time = "
-         << avgWait / n;
-
-    cout << "\nAverage Turnaround Time = "
-         << avgTT / n << endl;
+    cout << ganttT[0];
+    for(int i = 1; i <= g; i++)
+    {
+        cout << "\t" << ganttT[i];
+    }
+    cout << "\n\n";
 
     return 0;
 }
-/*
-#include<bits/stdc++.h>
-using namespace std;
-
-void queueUpdation(int queue[],int n,int maxProcessIndex)
-{
-    int zeroIndex=-1;
-    for(int i=0;i<n;i++)
-    {
-        if(queue[i]==0)
-        {
-            zeroIndex=i;
-            break;
-        }
-    }
-    if(zeroIndex!=-1)queue[zeroIndex]=maxProcessIndex+1;
-}
-void queueMaintenance(int queue[],int n)
-{
-    for(int i=0;i<n-1 &&queue[i+1]!=0;i++)
-
-    {
-        swap(queue[i],queue[i+1]);
-    }
-}
-
-void checkNewArrial(int timer,int arrival[],int n,
-    int &maxProcessIndex,int queue[])
-{
-    if(timer<=arrival[n-1])
-    {
-        bool newArrival=false;
-        for(int j=maxProcessIndex+1;j<n;j++)
-        {
-            if(arrival[j]<=timer)
-            {
-                maxProcessIndex=j;
-                newArrival=true;
-            }
-        }
-        if(newArrival)
-            queueUpdation(queue,n,maxProcessIndex);
-    }
-}
-
-
-int main()
-{
-    int n,i,j,quantum,timer=0,maxProcessIndex=0;
-    double avgWT=0,avgTT=0;
-    cout<<"Enter The Quantum: ";
-    cin>>quantum;
-    cout<<"Enter Number of Precess: ";
-    cin>>n;
-
-    int pid[n],arrival[n],burst[n],
-    temp_burst[n],wait[n],turn[n];
-    int queue[n]={0};
-    bool complete[n]={false};
-
-    //gantt chart arrays
-    int ganttPid[1000],ganttStart[1000],ganttEnd[1000];
-    int ganttCount=0;
-
-    cout<<"\nEnter Arrival Time: \n";
-    for(i=0;i<n;i++)
-    {
-        pid[i]=i+1;
-        cout<<"P"<<i+1<<": ";
-        cin>>arrival[i];
-    }
-
-    cout<<"\nEnter Burst Time:\n";
-    for(i=0;i<n;i++)
-    {
-        cout<<"P"<<i+1<<": ";
-        cin>>burst[i];
-        temp_burst[i]=burst[i];
-    }
-
-    //sort by arrival time
-    for(i=0;i<n-1;i++)
-    {
-        for(j=i+1;j<n;j++)
-        {
-            if(arrival[i]>arrival[j])
-            {
-                swap(arrival[i],arrival[j]);
-                swap(burst[i],burst[j]);
-                swap(temp_burst[i], temp_burst[j]);
-                swap(pid[i],pid[j]);
-            }
-        }
-    }
-
-    while(timer<arrival[0])timer++;
-
-    queue[0]=1;
-    while(true)
-    {
-        bool finished = true;
-        for(i=0;i<n;i++)
-        {
-            if(temp_burst[i]>0)
-            {
-                finished=false;
-                break;
-            }
-        }
-
-        //complete process
-        if(finished){break;}
-
-        for(i=0;i<n&&queue[i]!=0;i++)
-        {
-            int current=queue[0]-1;
-            int startTimer=timer;
-            int counter=0;
-
-            while(counter<quantum&&temp_burst[current]>0)
-            {
-                temp_burst[current]--;
-                timer++;
-                counter++;
-
-                checkNewArrial(timer,arrival,n,maxProcessIndex,queue);
-            }
-
-            //store gantt chart 
-            if(startTimer!=timer)
-            {
-                ganttPid[ganttCount]=pid[current];
-                ganttStart[ganttCount]=startTimer;
-                ganttEnd[ganttCount]=timer;
-                ganttCount++;
-            }
-
-            if(temp_burst[current]==0&&complete[current]==false)
-            {
-                turn[current]=timer;
-                complete[current]=true;
-            }
-            bool idle=true;
-            if(queue[n-1]==0)
-            {
-                for(int j=0;j<n&&queue[j]!=0;j++)
-                {
-                    if(!complete[queue[j]-1])
-                    {
-                        idle=false;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                idle=false;
-            }
-            if(idle)
-            {
-                timer++;
-                checkNewArrial(timer,arrival,n,maxProcessIndex,queue);
-            }
-            queueMaintenance(queue,n);
-        }
-
-    }
-    //calculate wt,tat
-    for(i=0;i<n;i++)
-    {
-        turn[i]=turn[i]-arrival[i];
-        wait[i]=turn[i]-burst[i];
-
-        avgWT+=wait[i];
-        avgTT+=turn[i];
-    }
-    //process table
-    cout<<"\n\nPID\tAT\tBT\tWT\tTAT\n";
-    for(i=0;i<n;i++)
-    {
-        cout<<"P"<<pid[i]
-        <<"\t"<<arrival[i]
-        <<"\t"<<burst[i]
-        <<"\t"<<wait[i]
-        <<"\t"<<turn[i]<<'\n';
-    }
-    //gantt chart
-    cout<<"\nGantt Chart:\n";
-    for(i=0;i<ganttCount;i++)
-    {
-        cout<<"| P"<<ganttPid[i]<<" ";
-    }
-    cout<<"|\n";
-    cout<<ganttStart[0];
-    for(i=0;i<ganttCount;i++)
-    {
-        cout<<"\t"<<ganttEnd[i];
-    }
-    cout<<"\n\nAverage Waiting Time = "<<avgWT/n;
-    cout<<"\nAverage Tarnaround Time = "<<avgTT/n;
-}
-*/
